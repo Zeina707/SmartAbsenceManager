@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "123244335210",
+    "project_id": "gestion-intelligente-absences",
+    "storage_bucket": "gestion-intelligente-absences.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123244335210:android:ee5917e969c8da17edfa13",
+        "android_client_info": {
+          "package_name": "com.example.gestionintelligentedesabsences"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClgWcukDAhWa4n9mI-d1U_Hte3V6NBJ2s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

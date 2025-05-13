@@ -1,0 +1,38 @@
+<!-- Temporary logo -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="120dp"
+    android:height="120dp"
+    android:viewportWidth="120"
+    android:viewportHeight="120">
+
+    <!-- Background Circle -->
+    <path
+        android:fillColor="#2196F3"
+        android:pathData="M60,0
+                          A60,60 0 1,1 59.9,0
+                          Z" />
+
+    <!-- Graduation Cap -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M30,45
+                          L60,30
+                          L90,45
+                          L60,60
+                          Z" />
+
+    <!-- Cap String -->
+    <path
+        android:strokeWidth="3"
+        android:strokeColor="#FFC107"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M60,60 L60,80" />
+
+    <!-- AI Circuit Lines (Stylized) -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M45,85 L50,90 M60,80 L60,90 M75,85 L70,90" />
+</vector>
