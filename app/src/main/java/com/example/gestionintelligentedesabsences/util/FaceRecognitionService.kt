@@ -32,7 +32,7 @@ class FaceRecognitionService(private val context: Context) {
     companion object {
         private const val TAG = "FaceRecognitionService"
         private const val MODEL_FILE = "facenet_model.tflite"
-        private const val THRESHOLD = 0.6f // Adjusted similarity threshold
+        private const val THRESHOLD = 0.9f // Adjusted similarity threshold was 0.6
         private const val PHOTO_DIR = "student_photos"
     }
 

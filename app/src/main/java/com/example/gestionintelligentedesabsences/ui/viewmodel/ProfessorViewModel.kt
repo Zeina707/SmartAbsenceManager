@@ -212,7 +212,7 @@ class ProfessorViewModel : ViewModel() {
         return courseSchedules.sortedBy { it.schedule.day }
     }
 
-    private suspend fun calculateAbsenceStats(students: List<Student>): AbsenceStatistics {
+    private suspend fun calculateAbsenceStats(students: List<Student>): AbsenceStatistics2 {
         val totalStudents = students.size
         var studentsWithAbsences = 0
         var totalAbsences = 0
@@ -233,7 +233,7 @@ class ProfessorViewModel : ViewModel() {
             }
         }
 
-        return AbsenceStatistics(
+        return AbsenceStatistics2(
             totalStudents = totalStudents,
             studentsWithAbsences = studentsWithAbsences,
             totalAbsences = totalAbsences,
@@ -286,7 +286,7 @@ class ProfessorViewModel : ViewModel() {
         }
     }
 
-    fun getStudentsForCourse(courseId: String) {
+    fun getStudentsForCourse2(courseId: String) {
         viewModelScope.launch {
             try {
                 _uiState.update { it.copy(isLoadingStudents = true) }
@@ -299,15 +299,24 @@ class ProfessorViewModel : ViewModel() {
                     .toObject(Course::class.java)
                     ?: throw Exception("Cours/Examen non trouvé")
 
+                // Log course details for debugging
+                Log.d(TAG, "Fetching students for course: ${course.name}, ID: ${course.id}, Level: ${course.level}, Branch: ${course.branch}, Group: ${course.group}")
+
                 // Get students enrolled in this course, filtered by branch and group
                 val query = firestore.collection("students")
                     .whereEqualTo("level", course.level)
                     .apply {
                         if (course.branch.isNotEmpty()) {
                             whereEqualTo("branch", course.branch)
+                            Log.d(TAG, "Applying branch filter: ${course.branch}")
+                        } else {
+                            Log.w(TAG, "Branch is empty for course: ${course.id}")
                         }
                         if (course.group.isNotEmpty()) {
                             whereEqualTo("group", course.group)
+                            Log.d(TAG, "Applying group filter: ${course.group}")
+                        } else {
+                            Log.w(TAG, "Group is empty for course: ${course.id}")
                         }
                     }
 
@@ -317,6 +326,7 @@ class ProfessorViewModel : ViewModel() {
                     .documents
                     .mapNotNull { doc ->
                         val student = doc.toObject(Student::class.java) ?: return@mapNotNull null
+                        Log.d(TAG, "Student: ${student.firstName} ${student.lastName}, ID: ${student.studentId}, Branch: ${student.branch}, Group: ${student.group}")
                         student.copy(userId = doc.id)
                     }
 
@@ -399,8 +409,8 @@ data class ProfessorUiState(
     val professorCourses: List<Course> = emptyList(),
     val lStudents: List<Student> = emptyList(),
     val mStudents: List<Student> = emptyList(),
-    val lAbsenceStats: AbsenceStatistics = AbsenceStatistics(),
-    val mAbsenceStats: AbsenceStatistics = AbsenceStatistics(),
+    val lAbsenceStats: AbsenceStatistics2 = AbsenceStatistics2(),
+    val mAbsenceStats: AbsenceStatistics2 = AbsenceStatistics2(),
     val upcomingLCoursesAndExams: List<CourseWithSchedule> = emptyList(),
     val upcomingMCoursesAndExams: List<CourseWithSchedule> = emptyList(),
     val currentFilteredCourses: List<Course> = emptyList(),
@@ -418,4 +428,10 @@ data class ProfessorUiState(
 data class CourseWithSchedule(
     val course: Course,
     val schedule: Schedule
+)
+
+data class AbsenceStatistics2(
+    val totalStudents: Int = 0,
+    val studentsWithAbsences: Int = 0,
+    val totalAbsences: Int = 0,
 )

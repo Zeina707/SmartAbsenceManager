@@ -273,7 +273,7 @@ fun ProfessorDashboard(
                                                     courseWithSchedule = courseWithSchedule,
                                                     dayName = daysOfWeek[courseWithSchedule.schedule.day % 7],
                                                     onScanClick = {
-                                                        viewModel.getStudentsForCourse(courseWithSchedule.course.id)
+                                                        viewModel.getStudentsForCourse2(courseWithSchedule.course.id)
                                                     }
                                                 )
                                                 Divider()
@@ -317,7 +317,7 @@ fun ProfessorDashboard(
                                                 CourseItem(
                                                     course = course,
                                                     onViewStudents = {
-                                                        viewModel.getStudentsForCourse(course.id)
+                                                        viewModel.getStudentsForCourse2(course.id)
                                                     }
                                                 )
                                                 Divider()
@@ -403,6 +403,10 @@ fun UpcomingCourseItem(
     } else {
         "Cours" to Icons.Default.Home
     }
+
+    // Disable scan button if branch or group is empty
+    val isScanEnabled = course.branch.isNotEmpty() && course.group.isNotEmpty()
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -445,17 +449,30 @@ fun UpcomingCourseItem(
                     text = "Filière: ${course.branch}",
                     style = MaterialTheme.typography.bodySmall
                 )
+            } else {
+                Text(
+                    text = "Filière: Non spécifiée",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error
+                )
             }
             if (course.group.isNotEmpty()) {
                 Text(
                     text = "Groupe: ${course.group}",
                     style = MaterialTheme.typography.bodySmall
                 )
+            } else {
+                Text(
+                    text = "Groupe: Non spécifié",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error
+                )
             }
         }
 
         Button(
             onClick = onScanClick,
+            enabled = isScanEnabled,
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer
@@ -478,6 +495,9 @@ fun CourseItem(
 ) {
     val courseTypeText = if (course.isExam) "Examen" else "Cours"
     val courseIcon = if (course.isExam) Icons.Default.Warning else Icons.Default.Home
+
+    // Disable scan button if branch or group is empty
+    val isScanEnabled = course.branch.isNotEmpty() && course.group.isNotEmpty()
 
     Row(
         modifier = Modifier
@@ -512,17 +532,30 @@ fun CourseItem(
                     text = "Filière: ${course.branch}",
                     style = MaterialTheme.typography.bodySmall
                 )
+            } else {
+                Text(
+                    text = "Filière: Non spécifiée",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error
+                )
             }
             if (course.group.isNotEmpty()) {
                 Text(
                     text = "Groupe: ${course.group}",
                     style = MaterialTheme.typography.bodySmall
                 )
+            } else {
+                Text(
+                    text = "Groupe: Non spécifié",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.error
+                )
             }
         }
 
         TextButton(
-            onClick = onViewStudents
+            onClick = onViewStudents,
+            enabled = isScanEnabled
         ) {
             Text("Scanner")
         }
@@ -620,18 +653,14 @@ fun AttendanceMarkingScreen2(
                                 text = "ID: ${student.studentId}",
                                 style = MaterialTheme.typography.bodySmall
                             )
-                            if (student.branch.isNotEmpty()) {
-                                Text(
-                                    text = "Filière: ${student.branch}",
-                                    style = MaterialTheme.typography.bodySmall
-                                )
-                            }
-                            if (student.group.isNotEmpty()) {
-                                Text(
-                                    text = "Groupe: ${student.group}",
-                                    style = MaterialTheme.typography.bodySmall
-                                )
-                            }
+                            Text(
+                                text = "Filière: ${student.branch.ifEmpty { "Non spécifiée" }}",
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                            Text(
+                                text = "Groupe: ${student.group.ifEmpty { "Non spécifié" }}",
+                                style = MaterialTheme.typography.bodySmall
+                            )
                         }
 
                         // Status indicator

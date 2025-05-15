@@ -272,7 +272,7 @@ private fun CameraPreview(
                     it.setSurfaceProvider(previewView.surfaceProvider)
                 }
 
-                val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
+                val cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA //BACK_CAMERA
 
                 try {
                     cameraProvider.unbindAll()
@@ -343,7 +343,7 @@ private fun processCapturedImage(
 ) {
     kotlinx.coroutines.MainScope().launch {
         val isRecognized = withContext(Dispatchers.IO) {
-            faceRecognitionService.matchFaceWithStudent(bitmap, student.userId)
+            faceRecognitionService.matchFaceWithStudent(bitmap, student.studentId)
         }
         onResult(isRecognized)
     }
@@ -411,7 +411,7 @@ fun FaceRegistrationDialog(
                                 // Register photo
                                 kotlinx.coroutines.MainScope().launch {
                                     val success = withContext(Dispatchers.IO) {
-                                        faceRecognitionService.registerFace(bitmap, student.userId)
+                                        faceRecognitionService.registerFace(bitmap, student.studentId)
                                     }
 
                                     isProcessing = false
